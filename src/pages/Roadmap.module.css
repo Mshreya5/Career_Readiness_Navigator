@@ -1,0 +1,81 @@
+.page { display: flex; flex-direction: column; gap: 1.25rem; }
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 600; }
+.sub { font-size: 14px; color: var(--ink-muted); margin-top: 4px; }
+.overallProgress { text-align: right; }
+.overallPct { display: block; font-size: 1.75rem; font-weight: 800; color: var(--forest); line-height: 1; }
+.overallLabel { font-size: 12px; color: var(--ink-faint); }
+.overallBar { margin-bottom: 0.5rem; }
+
+.timeline { display: flex; flex-direction: column; gap: 0; }
+
+.phaseRow { display: flex; gap: 1.25rem; }
+
+.spine { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 20px; }
+.spineDot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid;
+  flex-shrink: 0;
+  z-index: 1;
+  margin-top: 18px;
+}
+.spineLine { width: 2px; flex: 1; background: var(--border-light); min-height: 20px; }
+
+.phaseCard { flex: 1; margin-bottom: 1.25rem; padding: 0; overflow: hidden; }
+.upcoming { opacity: 0.75; }
+
+.phaseHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 1.25rem;
+  background: none; border: none; width: 100%;
+  cursor: pointer; text-align: left;
+  gap: 1rem;
+  transition: background 0.15s;
+}
+.phaseHeader:hover { background: var(--paper); }
+
+.phaseLeft { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1; }
+.phaseTitle { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; color: var(--ink); }
+.phaseDur { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ink-faint); }
+
+.phaseRight { display: flex; align-items: center; gap: 10px; color: var(--ink-muted); flex-shrink: 0; }
+.phasePct { font-size: 13px; font-weight: 700; color: var(--ink-mid); }
+
+.phaseBarWrap { padding: 0 1.25rem 0; }
+
+.phaseBody { padding: 1rem 1.25rem 1.25rem; border-top: 1px solid var(--border-light); margin-top: 10px; }
+.phaseDesc { font-size: 13px; color: var(--ink-muted); margin-bottom: 1rem; line-height: 1.6; }
+
+.milestonesTitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-faint); margin-bottom: 8px; }
+.milestones { display: flex; flex-direction: column; gap: 4px; margin-bottom: 1rem; }
+
+.milestone {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: none; border: none;
+  cursor: pointer; text-align: left;
+  transition: background 0.15s;
+  width: 100%;
+}
+.milestone:hover { background: var(--paper); }
+.milestoneCheck { color: var(--forest); flex-shrink: 0; margin-top: 1px; }
+.milestoneCircle { color: var(--border); flex-shrink: 0; margin-top: 1px; }
+.milestoneText { flex: 1; font-size: 13.5px; color: var(--ink-mid); line-height: 1.4; }
+.milestoneDone .milestoneText { color: var(--forest); text-decoration: line-through; opacity: 0.7; }
+.milestoneHours { font-size: 11px; color: var(--ink-faint); white-space: nowrap; margin-top: 2px; }
+
+.resourcesTitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-faint); margin-bottom: 8px; }
+.resourceLinks { display: flex; flex-wrap: wrap; gap: 8px; }
+.resourceLink {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  font-size: 12px; font-weight: 500;
+  color: var(--forest);
+  transition: all 0.15s;
+}
+.resourceLink:hover { background: var(--forest-pale); border-color: var(--forest-light); }

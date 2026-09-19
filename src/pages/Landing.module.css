@@ -1,0 +1,169 @@
+.page {
+  min-height: 100vh;
+  background: var(--cream);
+  font-family: var(--font-body);
+}
+
+/* Nav */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 3rem;
+  border-bottom: 1px solid var(--border-light);
+  background: rgba(250,247,242,0.95);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.navLogo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display);
+  font-size: 1.25rem; font-weight: 600;
+  color: var(--forest);
+}
+.navLinks { display: flex; gap: 10px; }
+
+/* Hero */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 5rem 3rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.heroInner { display: flex; flex-direction: column; gap: 1.25rem; }
+.heroEyebrow {
+  font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--forest-light);
+}
+.heroHeadline {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4vw, 3.5rem);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.heroHeadline em { color: var(--forest); font-style: italic; }
+.heroSub { font-size: 1.05rem; color: var(--ink-muted); line-height: 1.7; max-width: 480px; }
+.heroCtas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.heroVisual { display: flex; flex-direction: column; gap: 14px; }
+.heroCard {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+.heroCardSm { padding: 1rem 1.25rem; }
+.heroCardLabel { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); margin-bottom: 6px; }
+.heroCardScore { font-size: 2.5rem; font-weight: 800; color: var(--forest); line-height: 1; margin-bottom: 10px; }
+.heroCardBar { height: 8px; background: var(--paper-dark); border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
+.heroCardFill { height: 100%; background: var(--forest); border-radius: 99px; }
+.heroCardCareer { font-size: 13px; font-weight: 600; color: var(--ink-mid); }
+.heroCardMilestone { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.heroCardPhase { font-size: 12px; color: var(--ink-faint); }
+
+/* Sections */
+.sectionEyebrow {
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--terra);
+  margin-bottom: 8px;
+}
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2.5rem;
+}
+
+/* Steps */
+.steps { background: var(--paper); padding: 5rem 3rem; }
+.stepsInner { max-width: 1100px; margin: 0 auto; }
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+}
+.step {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 1.25rem;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+.stepNum {
+  font-size: 11px; font-weight: 800;
+  color: var(--forest-light);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.stepIcon {
+  width: 40px; height: 40px;
+  background: var(--forest-pale);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--forest);
+}
+.stepLabel { font-size: 15px; font-weight: 700; color: var(--ink); }
+.stepDesc { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+
+/* Featured */
+.featured { padding: 5rem 3rem; }
+.featuredInner { max-width: 1100px; margin: 0 auto; }
+.careerGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+.careerTile {
+  display: flex; align-items: center; gap: 14px;
+  padding: 1rem 1.25rem;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+.careerIcon { font-size: 1.75rem; flex-shrink: 0; }
+.careerTitle { font-size: 15px; font-weight: 600; color: var(--ink); }
+.careerSalary { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+.demandBadge { margin-left: auto; flex-shrink: 0; }
+
+/* Footer */
+.footer {
+  background: #1c2b12;
+  color: rgba(232,240,223,0.7);
+  padding: 3rem;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.footerLogo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 600;
+  color: #e8f0df;
+}
+.footerTagline { font-size: 13px; font-style: italic; color: rgba(232,240,223,0.5); }
+.footerLinks { display: flex; gap: 1.5rem; font-size: 13px; }
+.footerLinks a { color: rgba(232,240,223,0.6); transition: color 0.15s; }
+.footerLinks a:hover { color: #e8f0df; }
+.footerCopy { font-size: 12px; color: rgba(232,240,223,0.35); }
+
+@media (max-width: 1000px) {
+  .stepsGrid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 760px) {
+  .nav { padding: 1rem 1.25rem; }
+  .hero { grid-template-columns: 1fr; padding: 3rem 1.25rem; }
+  .heroVisual { display: none; }
+  .steps, .featured { padding: 3rem 1.25rem; }
+  .stepsGrid { grid-template-columns: repeat(2, 1fr); }
+  .careerGrid { grid-template-columns: 1fr; }
+  .footer { padding: 2rem 1.25rem; }
+}
+@media (max-width: 480px) {
+  .stepsGrid { grid-template-columns: 1fr; }
+}

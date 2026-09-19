@@ -1,0 +1,91 @@
+.page {
+  min-height: 100vh;
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background-image: radial-gradient(ellipse at 60% 20%, rgba(45,80,22,0.06) 0%, transparent 60%);
+}
+.card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 440px;
+}
+.cardWide { max-width: 560px; }
+
+.logo {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display);
+  font-size: 1.2rem; font-weight: 600;
+  color: var(--forest);
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+}
+.heading {
+  font-family: var(--font-display);
+  font-size: 1.75rem; font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.sub { font-size: 14px; color: var(--ink-muted); margin-bottom: 1.5rem; }
+
+.error {
+  background: var(--terra-pale);
+  border: 1px solid #e8c0b0;
+  color: var(--terra);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  margin-bottom: 1rem;
+}
+
+.form { display: flex; flex-direction: column; gap: 1rem; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.pwWrap { position: relative; }
+.pwWrap .form-input { width: 100%; padding-right: 2.5rem; }
+.eyeBtn {
+  position: absolute; right: 10px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  color: var(--ink-faint); cursor: pointer; padding: 2px;
+}
+.eyeBtn:hover { color: var(--ink-mid); }
+
+.checkRow {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--ink-muted);
+  cursor: pointer;
+}
+.checkRow input { accent-color: var(--forest); width: 15px; height: 15px; }
+
+.submitBtn { width: 100%; justify-content: center; padding: 11px; font-size: 15px; }
+
+.switchText { text-align: center; font-size: 13px; color: var(--ink-muted); margin-top: 1rem; }
+.switchText a { color: var(--forest); font-weight: 600; }
+
+.demoHint { text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 6px; font-style: italic; }
+
+.interestGrid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+.interestBtn {
+  padding: 5px 12px;
+  border-radius: 99px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 12px; font-weight: 500;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.interestBtn:hover { border-color: var(--forest-light); color: var(--forest); }
+.interestActive { border-color: var(--forest); background: var(--forest-pale); color: var(--forest); font-weight: 600; }
+
+@media (max-width: 480px) {
+  .card { padding: 1.75rem 1.25rem; }
+  .grid2 { grid-template-columns: 1fr; }
+}

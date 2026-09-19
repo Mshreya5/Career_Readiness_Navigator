@@ -1,0 +1,32 @@
+.profile-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.profile-avatar-card {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.avatar-circle {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.profile-avatar-card h3 { font-size: 1.1rem; }
+.profile-avatar-card p { color: var(--text-muted); font-size: 0.875rem; }
+
+@media (max-width: 700px) {
+  .profile-layout { grid-template-columns: 1fr; }
+}

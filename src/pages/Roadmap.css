@@ -1,0 +1,72 @@
+.roadmap-timeline { display: flex; flex-direction: column; gap: 0; }
+
+.roadmap-phase { display: flex; gap: 1.25rem; }
+
+.phase-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.phase-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.phase-line {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+  min-height: 24px;
+}
+
+.phase-content {
+  flex: 1;
+  margin-bottom: 1.25rem;
+}
+
+.phase-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.phase-duration {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.phase-content h3 { margin-bottom: 0.75rem; }
+
+.phase-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.phase-progress-text { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
+
+.roadmap-topics { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.roadmap-topics li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem 0;
+  transition: color 0.2s;
+}
+.roadmap-topics li:hover { color: var(--primary); }
+.roadmap-topics li.done { color: var(--success); }
+.roadmap-topics li.done svg { color: var(--success); }

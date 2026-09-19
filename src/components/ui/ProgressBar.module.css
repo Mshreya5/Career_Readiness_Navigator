@@ -1,0 +1,14 @@
+.wrap { display: flex; flex-direction: column; gap: 5px; }
+.meta { display: flex; justify-content: space-between; align-items: center; }
+.label { font-size: 13px; font-weight: 500; color: var(--ink-mid); }
+.pct   { font-size: 12px; font-weight: 600; color: var(--ink-muted); }
+.track {
+  background: var(--paper-dark);
+  border-radius: 99px;
+  overflow: hidden;
+  width: 100%;
+}
+.fill {
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}

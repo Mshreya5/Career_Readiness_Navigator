@@ -1,0 +1,90 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  height: var(--navbar-h);
+  background: rgba(250,247,242,0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 100;
+  gap: 12px;
+}
+
+.menuBtn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--ink-mid);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+}
+.menuBtn:hover { background: var(--paper); }
+
+.mobileLogo {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--forest);
+  flex: 1;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.careerBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--forest-pale);
+  border: 1px solid #c5dba8;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--forest);
+}
+.careerDot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--forest-light);
+}
+
+.iconBtn {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--ink-muted);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.iconBtn:hover { background: var(--paper); color: var(--ink); }
+
+.avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--forest);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+
+@media (max-width: 860px) {
+  .menuBtn { display: flex; }
+  .mobileLogo { display: flex; }
+  .careerBadge { display: none; }
+}
