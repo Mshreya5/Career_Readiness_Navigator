@@ -1,23 +1,50 @@
 const mongoose = require('mongoose');
 const Career = require('../models/Career');
 
-/**
- * GET /api/careers
- * Returns the list of available careers for the frontend's Career Paths view.
- */
 const getCareers = async (req, res, next) => {
   try {
-    const careers = await Career.find({}, 'title description requiredSkills recommendedSkills');
+    let careers = await Career.find({}, 'title description requiredSkills recommendedSkills');
+    if (!careers || careers.length === 0) {
+      await Career.insertMany([
+        {
+          title: 'Full Stack Developer',
+          description: 'Develops full-stack web applications across frontend, backend and databases.',
+          requiredSkills: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'Express', 'MongoDB', 'HTML', 'CSS', 'Git', 'SQL'],
+          recommendedSkills: ['Docker', 'Next.js', 'REST APIs', 'System Design']
+        },
+        {
+          title: 'Data Scientist',
+          description: 'Analyzes complex datasets, extracts insights, and builds machine learning models.',
+          requiredSkills: ['Python', 'SQL', 'Pandas', 'NumPy', 'Scikit-Learn', 'Statistics', 'Machine Learning', 'Data Visualization'],
+          recommendedSkills: ['TensorFlow', 'PyTorch', 'Tableau', 'Big Data']
+        },
+        {
+          title: 'Frontend Developer',
+          description: 'Engineers high-performance, responsive user interfaces and web applications.',
+          requiredSkills: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Tailwind', 'Git'],
+          recommendedSkills: ['Figma', 'Next.js', 'Web Performance', 'Redux']
+        },
+        {
+          title: 'Backend Developer',
+          description: 'Architects and maintains secure server-side logic, databases, microservices and APIs.',
+          requiredSkills: ['JavaScript', 'Node.js', 'Express', 'Python', 'SQL', 'MongoDB', 'Git'],
+          recommendedSkills: ['Docker', 'PostgreSQL', 'Redis', 'GraphQL', 'Microservices']
+        },
+        {
+          title: 'DevOps Engineer',
+          description: 'Automates deployment pipelines, cloud infrastructure, monitoring and security.',
+          requiredSkills: ['Linux', 'Docker', 'Git', 'Python', 'Bash', 'CI/CD', 'SQL'],
+          recommendedSkills: ['Kubernetes', 'Terraform', 'AWS', 'Monitoring']
+        }
+      ]);
+      careers = await Career.find({}, 'title description requiredSkills recommendedSkills');
+    }
     return res.status(200).json(careers);
   } catch (error) {
     return next(error);
   }
 };
 
-/**
- * GET /api/careers/:id
- * Returns a single career by id.
- */
 const getCareerById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -37,10 +64,6 @@ const getCareerById = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/careers/:id/skills
- * Returns just the required skills for a career (used by the Skill Intelligence module input).
- */
 const getCareerSkills = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -64,11 +87,6 @@ const getCareerSkills = async (req, res, next) => {
   }
 };
 
-/**
- * POST /api/careers
- * Body: { title, description?, requiredSkills?, recommendedSkills? }
- * Optional admin-style endpoint to add a career to the database.
- */
 const createCareer = async (req, res, next) => {
   try {
     const title = typeof req.body.title === 'string' ? req.body.title.trim() : '';

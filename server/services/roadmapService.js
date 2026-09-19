@@ -48,32 +48,23 @@ function getDescription(skill) {
   return DESCRIPTIONS[key] || `Develop proficiency in ${skill} to meet career requirements.`;
 }
 
-/**
- * Converts Member 3 API output into ordered roadmap milestones
- * Uses learningOrder if available, otherwise sorts by priority
- */
 function buildMilestones(skillGapData, recommendationData) {
   const { missingSkills = [], priorities = [] } = skillGapData;
   const { recommendations = [], learningOrder = [] } = recommendationData || {};
 
-  // Build a map of skill -> recommendation details
   const recMap = {};
   recommendations.forEach(r => { recMap[r.skill] = r; });
 
-  // Build priority map
   const priorityMap = {};
   priorities.forEach(p => { priorityMap[p.skill] = p.priority; });
 
-  // Determine ordered skill list
   let orderedSkills = [];
   if (learningOrder.length > 0) {
-    // Use learningOrder, then append any missing skills not in it
     orderedSkills = [...learningOrder];
     missingSkills.forEach(s => {
       if (!orderedSkills.includes(s)) orderedSkills.push(s);
     });
   } else {
-    // Sort by priority: High → Medium → Low
     const priorityRank = { High: 1, Medium: 2, Low: 3 };
     orderedSkills = [...missingSkills].sort((a, b) => {
       const pa = priorityRank[priorityMap[a]] || 4;

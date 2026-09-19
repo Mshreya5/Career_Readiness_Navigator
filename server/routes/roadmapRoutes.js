@@ -12,8 +12,8 @@ const {
 router.post('/generate', generateRoadmap);
 router.get('/careers', getCareers);
 router.post('/student', upsertStudent);
-router.get('/:studentId/:careerId', getRoadmap);
-router.patch('/:roadmapId/milestone/:milestoneId', updateMilestone);
 router.get('/:roadmapId/progress', getProgress);
+router.patch('/:roadmapId/milestone/:milestoneId', updateMilestone);
+router.get('/:studentId/:careerId', getRoadmap);
 
 module.exports = router;

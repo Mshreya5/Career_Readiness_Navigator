@@ -3,15 +3,9 @@ const User = require('../models/User');
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/**
- * Generates a signed JWT for a given user id.
- */
 const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  jwt.sign({ id }, process.env.JWT_SECRET || 'careernova_secret_key', { expiresIn: '7d' });
 
-/**
- * Shape a user object for API responses (never leaks the password).
- */
 const toSafeUser = (user) => ({
   _id: user._id,
   name: user.name,
@@ -21,17 +15,12 @@ const toSafeUser = (user) => ({
   createdAt: user.createdAt
 });
 
-/**
- * POST /api/auth/register
- * Body: { name, email, password }
- */
 const register = async (req, res, next) => {
   try {
     const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
     const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
     const password = typeof req.body.password === 'string' ? req.body.password : '';
 
-    // Input validation
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -53,7 +42,6 @@ const register = async (req, res, next) => {
       });
     }
 
-    // Duplicate email check
     const existing = await User.findOne({ email });
     if (existing) {
       return res.status(409).json({
@@ -62,7 +50,6 @@ const register = async (req, res, next) => {
       });
     }
 
-    // Password is hashed by the User model's pre('save') hook
     const user = await User.create({ name, email, password });
 
     return res.status(201).json({
@@ -75,10 +62,6 @@ const register = async (req, res, next) => {
   }
 };
 
-/**
- * POST /api/auth/login
- * Body: { email, password }
- */
 const login = async (req, res, next) => {
   try {
     const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
@@ -91,7 +74,6 @@ const login = async (req, res, next) => {
       });
     }
 
-    // Explicitly select password since the schema hides it by default
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({

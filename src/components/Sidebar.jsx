@@ -29,7 +29,7 @@ export default function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar-logo">
         <Compass size={24} />
-        <span>CareerNav</span>
+        <span>CareerNova</span>
       </div>
       <nav className="sidebar-nav">
         {navItems.map(({ to, icon: Icon, label }) => (

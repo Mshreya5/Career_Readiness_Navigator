@@ -22,33 +22,33 @@ const seedData = async () => {
     const careers = await Career.insertMany([
       {
         title: 'Full Stack Developer',
-        description: 'Develops front-end and back-end web applications.',
-        requiredSkills: ['JavaScript', 'React', 'Node.js', 'MongoDB', 'HTML', 'CSS'],
-        recommendedSkills: ['Docker', 'TypeScript', 'Git']
+        description: 'Develops full-stack web applications across frontend, backend and databases.',
+        requiredSkills: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'Express', 'MongoDB', 'HTML', 'CSS', 'Git', 'SQL'],
+        recommendedSkills: ['Docker', 'Next.js', 'REST APIs', 'System Design']
       },
       {
         title: 'Data Scientist',
-        description: 'Analyzes data and builds machine learning models.',
-        requiredSkills: ['Python', 'Machine Learning', 'SQL', 'Pandas', 'NumPy'],
-        recommendedSkills: ['TensorFlow', 'Tableau', 'R']
+        description: 'Analyzes complex datasets, extracts insights, and builds machine learning models.',
+        requiredSkills: ['Python', 'SQL', 'Pandas', 'NumPy', 'Scikit-Learn', 'Statistics', 'Machine Learning', 'Data Visualization'],
+        recommendedSkills: ['TensorFlow', 'PyTorch', 'Tableau', 'Big Data']
       },
       {
         title: 'Frontend Developer',
-        description: 'Builds user interfaces and web experiences.',
-        requiredSkills: ['HTML', 'CSS', 'JavaScript', 'React', 'TypeScript'],
-        recommendedSkills: ['Figma', 'Tailwind', 'Next.js']
+        description: 'Engineers high-performance, responsive user interfaces and web applications.',
+        requiredSkills: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Tailwind', 'Git'],
+        recommendedSkills: ['Figma', 'Next.js', 'Web Performance', 'Redux']
       },
       {
         title: 'Backend Developer',
-        description: 'Builds and maintains server-side logic, APIs and databases.',
-        requiredSkills: ['JavaScript', 'Node.js', 'Express', 'MongoDB'],
-        recommendedSkills: ['Docker', 'PostgreSQL', 'Redis']
+        description: 'Architects and maintains secure server-side logic, databases, microservices and APIs.',
+        requiredSkills: ['JavaScript', 'Node.js', 'Express', 'Python', 'SQL', 'MongoDB', 'Git'],
+        recommendedSkills: ['Docker', 'PostgreSQL', 'Redis', 'GraphQL', 'Microservices']
       },
       {
         title: 'DevOps Engineer',
-        description: 'Manages CI/CD pipelines and cloud infrastructure.',
-        requiredSkills: ['Docker', 'Git', 'Linux', 'Python', 'SQL'],
-        recommendedSkills: ['Kubernetes', 'Terraform', 'AWS']
+        description: 'Automates deployment pipelines, cloud infrastructure, monitoring and security.',
+        requiredSkills: ['Linux', 'Docker', 'Git', 'Python', 'Bash', 'CI/CD', 'SQL'],
+        recommendedSkills: ['Kubernetes', 'Terraform', 'AWS', 'Monitoring']
       }
     ]);
 

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Compass, ArrowRight, Search, BarChart2, Map, CheckCircle, TrendingUp } from 'lucide-react'
+import { Compass, ArrowRight, Search, BarChart2, Map, CheckCircle, TrendingUp, Sparkles, Award, Target } from 'lucide-react'
 import { CAREERS } from '../data/mockData.js'
 import styles from './Landing.module.css'
 
@@ -18,7 +18,7 @@ export default function Landing() {
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
           <Compass size={20} strokeWidth={1.8} />
-          <span>CareerNav</span>
+          <span>CareerNova</span>
         </div>
         <div className={styles.navLinks}>
           <Link to="/login" className="btn btn-ghost btn-sm">Sign in</Link>
@@ -34,7 +34,7 @@ export default function Landing() {
             Your career path<br />starts with <em>clarity.</em>
           </h1>
           <p className={styles.heroSub}>
-            CareerNav helps you discover the right career, assess your skills honestly,
+            CareerNova helps you discover the right career, assess your skills honestly,
             close the gaps that matter, and build a roadmap that actually gets you there.
           </p>
           <div className={styles.heroCtas}>
@@ -45,18 +45,34 @@ export default function Landing() {
           </div>
         </div>
         <div className={styles.heroVisual}>
-          <div className={styles.heroCard}>
-            <div className={styles.heroCardLabel}>Skill Match</div>
-            <div className={styles.heroCardScore}>72%</div>
-            <div className={styles.heroCardBar}>
-              <div className={styles.heroCardFill} style={{ width: '72%' }} />
+          <div className={styles.heroFeatureCard}>
+            <div className={styles.heroCardHeader}>
+              <Sparkles size={18} style={{ color: 'var(--forest)' }} />
+              <span>Skill Intelligence Platform</span>
             </div>
-            <div className={styles.heroCardCareer}>Software Engineer</div>
-          </div>
-          <div className={`${styles.heroCard} ${styles.heroCardSm}`}>
-            <div className={styles.heroCardLabel}>Next milestone</div>
-            <div className={styles.heroCardMilestone}>Sorting &amp; searching algorithms</div>
-            <div className={styles.heroCardPhase}>Phase 2 · Week 3</div>
+            <div className={styles.heroWorkflowList}>
+              <div className={styles.heroWorkflowItem}>
+                <div className={styles.heroStepIconWrap}><Target size={16} /></div>
+                <div>
+                  <strong>Target Career Selection</strong>
+                  <p>Select from curated, in-demand technical roles</p>
+                </div>
+              </div>
+              <div className={styles.heroWorkflowItem}>
+                <div className={styles.heroStepIconWrap}><Award size={16} /></div>
+                <div>
+                  <strong>Objective Skill Assessment</strong>
+                  <p>Validate your knowledge with quizzes &amp; coding rounds</p>
+                </div>
+              </div>
+              <div className={styles.heroWorkflowItem}>
+                <div className={styles.heroStepIconWrap}><Map size={16} /></div>
+                <div>
+                  <strong>Gemini AI Roadmap</strong>
+                  <p>Get a personalized learning order &amp; milestones</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -108,7 +124,7 @@ export default function Landing() {
       <footer className={styles.footer}>
         <div className={styles.footerLogo}>
           <Compass size={16} strokeWidth={1.8} />
-          <span>CareerNav</span>
+          <span>CareerNova</span>
         </div>
         <p className={styles.footerTagline}>Navigate your skills. Build your future.</p>
         <div className={styles.footerLinks}>
@@ -116,7 +132,7 @@ export default function Landing() {
           <Link to="/signup">Get started</Link>
           <Link to="/careers">Careers</Link>
         </div>
-        <p className={styles.footerCopy}>© 2024 CareerNav. Built for students.</p>
+        <p className={styles.footerCopy}>© 2024 CareerNova. Built for students.</p>
       </footer>
     </div>
   )

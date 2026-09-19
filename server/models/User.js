@@ -16,8 +16,6 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    // Not required at schema level so existing/demo users created without a
-    // password (e.g. by Member 4's /api/roadmap/student upsert) keep working.
     select: false
   },
   skills: {
@@ -31,7 +29,6 @@ const userSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Hash password automatically whenever it is set/changed
 userSchema.pre('save', async function hashPassword(next) {
   if (!this.isModified('password') || !this.password) return next();
   try {
@@ -43,7 +40,6 @@ userSchema.pre('save', async function hashPassword(next) {
   }
 });
 
-// Instance helper to compare a plaintext password with the stored hash
 userSchema.methods.matchPassword = function matchPassword(enteredPassword) {
   if (!this.password) return false;
   return bcrypt.compare(enteredPassword, this.password);

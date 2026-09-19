@@ -4,9 +4,6 @@ const Career = require('../models/Career');
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/**
- * Shape a user object for API responses (never leaks the password).
- */
 const toSafeUser = (user) => ({
   _id: user._id,
   name: user.name,
@@ -16,10 +13,6 @@ const toSafeUser = (user) => ({
   createdAt: user.createdAt
 });
 
-/**
- * Normalizes an incoming skills array: must be an array of non-empty strings,
- * trimmed and de-duplicated.
- */
 const sanitizeSkills = (skills) => {
   if (!Array.isArray(skills)) return null;
   const cleaned = skills
@@ -28,12 +21,6 @@ const sanitizeSkills = (skills) => {
   return [...new Set(cleaned)];
 };
 
-/**
- * POST /api/users
- * Body: { name, email, password?, skills?, selectedCareer? }
- * Creates a student. If the email already exists, returns the existing student
- * (used by the frontend "create or get student" flow).
- */
 const createUser = async (req, res, next) => {
   try {
     const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
@@ -51,7 +38,6 @@ const createUser = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Skills must be an array of strings.' });
     }
 
-    // Validate optional selectedCareer reference
     let selectedCareer = null;
     if (req.body.selectedCareer) {
       if (!mongoose.Types.ObjectId.isValid(req.body.selectedCareer)) {
@@ -64,7 +50,6 @@ const createUser = async (req, res, next) => {
       selectedCareer = careerExists._id;
     }
 
-    // Upsert behaviour: return the existing student instead of erroring
     let user = await User.findOne({ email });
     if (user) {
       user.name = name;
@@ -85,10 +70,6 @@ const createUser = async (req, res, next) => {
   }
 };
 
-/**
- * GET /api/users/:id
- * Returns a single student's profile (without password).
- */
 const getUser = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -108,11 +89,6 @@ const getUser = async (req, res, next) => {
   }
 };
 
-/**
- * PATCH /api/users/:id
- * Body may include: name, skills, selectedCareer
- * Updates a student profile (never overwrites the password).
- */
 const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -164,11 +140,6 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-/**
- * PATCH /api/users/:id/skills
- * Body: { skills: [String] }
- * Replaces the student's skill set.
- */
 const updateUserSkills = async (req, res, next) => {
   try {
     const { id } = req.params;

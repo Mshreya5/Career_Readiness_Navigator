@@ -30,7 +30,7 @@ export default function Sidebar({ mobileOpen, onClose }) {
       <aside className={`${styles.sidebar} ${mobileOpen ? styles.open : ''}`}>
         <div className={styles.logo}>
           <Compass size={22} strokeWidth={1.8} />
-          <span>CareerNav</span>
+          <span>CareerNova</span>
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close menu"><X size={18} /></button>
         </div>
         <nav className={styles.nav} aria-label="Main navigation">

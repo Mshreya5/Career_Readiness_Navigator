@@ -1,10 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-/**
- * Reads the JWT from the Authorization header ("Bearer <token>"),
- * verifies it, loads the user and attaches it to req.user.
- */
 const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || '';
@@ -17,15 +13,9 @@ const protect = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
+    const secret = process.env.JWT_SECRET || 'careernova_secret_key';
 
-    if (!process.env.JWT_SECRET) {
-      return res.status(500).json({
-        success: false,
-        message: 'JWT_SECRET is not configured on the server.'
-      });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, secret);
     const user = await User.findById(decoded.id);
 
     if (!user) {

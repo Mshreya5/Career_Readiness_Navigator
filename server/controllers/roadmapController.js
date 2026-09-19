@@ -7,7 +7,6 @@ const { calculateSkillPriorities } = require('../services/priorityService');
 const { generateRecommendations } = require('../services/aiRecommendationService');
 const { buildMilestones } = require('../services/roadmapService');
 
-// POST /api/roadmap/generate
 const generateRoadmap = async (req, res) => {
   try {
     const { studentId, careerId } = req.body;
@@ -15,6 +14,7 @@ const generateRoadmap = async (req, res) => {
     if (!studentId || !careerId) {
       return res.status(400).json({ error: 'studentId and careerId are required.' });
     }
+
     if (!mongoose.Types.ObjectId.isValid(studentId) || !mongoose.Types.ObjectId.isValid(careerId)) {
       return res.status(400).json({ error: 'Invalid studentId or careerId.' });
     }
@@ -25,14 +25,12 @@ const generateRoadmap = async (req, res) => {
     const career = await Career.findById(careerId);
     if (!career) return res.status(404).json({ error: 'Career not found.' });
 
-    // Step 1: Skill gap (Member 3 logic)
     const uniqueStudentSkills = [...new Set(student.skills || [])];
     const uniqueCareerSkills = [...new Set(career.requiredSkills || [])];
     const gapAnalysis = calculateSkillGap(uniqueStudentSkills, uniqueCareerSkills);
     const priorities = calculateSkillPriorities(gapAnalysis.missingSkills, career.title, gapAnalysis.matchedSkills);
     const skillGapData = { ...gapAnalysis, priorities };
 
-    // Step 2: Recommendations (Member 3 AI service)
     let recommendationData = null;
     try {
       recommendationData = await generateRecommendations({
@@ -46,13 +44,11 @@ const generateRoadmap = async (req, res) => {
       console.warn('Recommendation API failed, using fallback milestones.');
     }
 
-    // Step 3: Build milestones
     const milestones = buildMilestones(skillGapData, recommendationData);
 
-    // Step 4: Upsert roadmap (replace if exists)
     const roadmap = await Roadmap.findOneAndUpdate(
-      { studentId, careerId },
-      { studentId, careerId, careerTitle: career.title, matchPercentage: gapAnalysis.matchPercentage, milestones },
+      { studentId: student._id, careerId: career._id },
+      { studentId: student._id, careerId: career._id, careerTitle: career.title, matchPercentage: gapAnalysis.matchPercentage, milestones },
       { upsert: true, new: true }
     );
 
@@ -63,7 +59,6 @@ const generateRoadmap = async (req, res) => {
   }
 };
 
-// GET /api/roadmap/:studentId/:careerId
 const getRoadmap = async (req, res) => {
   try {
     const { studentId, careerId } = req.params;
@@ -75,7 +70,6 @@ const getRoadmap = async (req, res) => {
   }
 };
 
-// PATCH /api/roadmap/:roadmapId/milestone/:milestoneId
 const updateMilestone = async (req, res) => {
   try {
     const { roadmapId, milestoneId } = req.params;
@@ -101,7 +95,6 @@ const updateMilestone = async (req, res) => {
   }
 };
 
-// GET /api/roadmap/:roadmapId/progress
 const getProgress = async (req, res) => {
   try {
     const roadmap = await Roadmap.findById(req.params.roadmapId);
@@ -126,7 +119,6 @@ const getProgress = async (req, res) => {
   }
 };
 
-// GET /api/roadmap/careers — list all careers for selection
 const getCareers = async (req, res) => {
   try {
     const careers = await Career.find({}, 'title description requiredSkills');
@@ -136,7 +128,6 @@ const getCareers = async (req, res) => {
   }
 };
 
-// POST /api/roadmap/student — create or get student by email
 const upsertStudent = async (req, res) => {
   try {
     const { name, email, skills } = req.body;

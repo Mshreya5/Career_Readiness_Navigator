@@ -17,8 +17,7 @@ function record(name, ok, detail) {
 }
 
 async function main() {
-  const mongod = await MongoMemoryServer.create();
-  process.env.MONGODB_URI = mongod.getUri('careernova_e2e');
+  process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/careernova_e2e';
   process.env.JWT_SECRET = process.env.JWT_SECRET || 'e2e_test_secret_key';
   process.env.AI_API_KEY = ''; // force deterministic fallback (no network)
   process.env.PORT = '5099';
@@ -112,7 +111,7 @@ async function main() {
   r = await call('PATCH', `/users/${newUserId}/skills`, { skills: 'not-an-array' });
   record('PATCH /api/users/:id/skills (bad input -> 400)', r.status === 400);
 
-  r = await call('GET', '/users/000');
+  r = await call('GET', '/users/000000000000000000000000');
   record('GET /api/users/:id (unknown -> 404)', r.status === 404);
 
   r = await call('GET', '/users/not-an-id');
@@ -130,7 +129,7 @@ async function main() {
   record('skill-gap missing careerId -> 400', r.status === 400);
   r = await call('POST', '/analysis/skill-gap', { studentId: 'bad', careerId: fsId });
   record('skill-gap invalid studentId -> 400', r.status === 400);
-  r = await call('POST', '/analysis/skill-gap', { studentId: '000', careerId: fsId });
+  r = await call('POST', '/analysis/skill-gap', { studentId: '000000000000000000000000', careerId: fsId });
   record('skill-gap unknown student -> 404', r.status === 404);
 
   // ---- MEMBER 3 INTEGRATION: recommendations (studentId + careerId) ----
@@ -152,6 +151,39 @@ async function main() {
     r = await call('GET', `/roadmap/${roadmapId}/progress`);
     record('GET roadmap progress', r.status === 200 && typeof r.data.percentage === 'number', `percentage=${r.data && r.data.percentage}`);
   }
+
+  // ---- ASSESSMENT MODULE ENDPOINTS ----
+  r = await call('POST', '/assessment/start', { skill: 'JavaScript' });
+  record('POST /api/assessment/start', r.status === 200 && r.data.quizAvailable === true);
+
+  r = await call('GET', '/assessment/questions/JavaScript');
+  record('GET /api/assessment/questions/:skill', r.status === 200 && Array.isArray(r.data.questions) && r.data.questions.length > 0);
+
+  r = await call('POST', '/assessment/submit', {
+    studentId: demoStudent._id.toString(),
+    careerId: fsId,
+    skill: 'JavaScript',
+    answers: { js_1: 'number', js_2: 'map()', js_3: 'Start', js_4: 'true, false', js_5: '1 2' }
+  });
+  record('POST /api/assessment/submit (quiz)', r.status === 201 && r.data.percentage === 100 && r.data.skillLevel === 'Strong', `score=${r.data.percentage}%`);
+
+  r = await call('GET', `/assessment/history/${demoStudent._id.toString()}`);
+  record('GET /api/assessment/history/:studentId', r.status === 200 && Array.isArray(r.data) && r.data.length >= 1);
+
+  r = await call('POST', '/coding/run', {
+    skill: 'JavaScript',
+    code: 'function findMax(arr) { return Math.max(...arr); }'
+  });
+  record('POST /api/coding/run', r.status === 200 && r.data.testCasesPassed > 0);
+
+  r = await call('POST', '/coding/submit', {
+    studentId: demoStudent._id.toString(),
+    careerId: fsId,
+    skill: 'JavaScript',
+    code: 'function findMax(arr) { return Math.max(...arr); }',
+    language: 'JavaScript'
+  });
+  record('POST /api/coding/submit', r.status === 201 && r.data.percentage === 100);
 
   // ---- Summary ----
   await mongoose.disconnect();
