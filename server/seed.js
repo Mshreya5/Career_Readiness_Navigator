@@ -15,6 +15,7 @@ const seedData = async () => {
     const student = await User.create({
       name: 'Alex Johnson',
       email: 'alex@example.com',
+      password: 'password123', // hashed automatically by the User model
       skills: ['HTML', 'Python']
     });
 
@@ -38,6 +39,12 @@ const seedData = async () => {
         recommendedSkills: ['Figma', 'Tailwind', 'Next.js']
       },
       {
+        title: 'Backend Developer',
+        description: 'Builds and maintains server-side logic, APIs and databases.',
+        requiredSkills: ['JavaScript', 'Node.js', 'Express', 'MongoDB'],
+        recommendedSkills: ['Docker', 'PostgreSQL', 'Redis']
+      },
+      {
         title: 'DevOps Engineer',
         description: 'Manages CI/CD pipelines and cloud infrastructure.',
         requiredSkills: ['Docker', 'Git', 'Linux', 'Python', 'SQL'],
@@ -47,6 +54,7 @@ const seedData = async () => {
 
     console.log('\n================ SEED SUCCESSFUL ================');
     console.log(`Student ID: ${student._id}  |  Skills: ${student.skills.join(', ')}`);
+    console.log('Demo login -> email: alex@example.com  |  password: password123');
     careers.forEach(c => console.log(`Career: ${c.title}  |  ID: ${c._id}`));
     console.log('=================================================\n');
     console.log('Sample payload for POST /api/analysis/skill-gap:');
