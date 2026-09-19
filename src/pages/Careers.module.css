@@ -1,0 +1,68 @@
+.page { display: flex; flex-direction: column; gap: 1.25rem; }
+.header { display: flex; align-items: flex-start; justify-content: space-between; }
+.title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 600; }
+.sub { font-size: 14px; color: var(--ink-muted); margin-top: 4px; }
+
+.filters { display: flex; flex-direction: column; gap: 10px; }
+.searchWrap {
+  position: relative;
+  max-width: 380px;
+}
+.searchIcon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--ink-faint); pointer-events: none; }
+.searchInput {
+  width: 100%;
+  padding: 9px 36px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  background: var(--white);
+  color: var(--ink);
+  transition: border-color 0.15s;
+}
+.searchInput:focus { border-color: var(--forest); outline: none; }
+.clearBtn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--ink-faint); cursor: pointer; }
+
+.filterGroup { display: flex; flex-wrap: wrap; gap: 6px; }
+.filterBtn {
+  padding: 5px 13px;
+  border-radius: 99px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  font-size: 12px; font-weight: 500;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filterBtn:hover { border-color: var(--forest-light); color: var(--forest); }
+.filterActive { border-color: var(--forest); background: var(--forest-pale); color: var(--forest); font-weight: 600; }
+
+.count { font-size: 13px; color: var(--ink-faint); }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+
+/* Detail modal */
+.detail { display: flex; flex-direction: column; gap: 1.25rem; }
+.detailTop { display: flex; gap: 14px; align-items: flex-start; }
+.detailIcon { font-size: 2.5rem; flex-shrink: 0; }
+.detailCategory { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-faint); margin-bottom: 4px; }
+.detailDesc { font-size: 14px; color: var(--ink-muted); line-height: 1.6; }
+.detailMeta { display: flex; gap: 1.5rem; }
+.detailMeta span { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--ink-muted); font-weight: 500; }
+.detailMatch { background: var(--paper); border-radius: var(--radius); padding: 1rem; }
+.detailMatchHeader { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-muted); margin-bottom: 8px; }
+.detailMatchHeader strong { color: var(--forest); font-size: 15px; }
+.detailSkills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.skillCol { display: flex; flex-direction: column; gap: 6px; }
+.skillColLabel { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+.skillPill { padding: 3px 9px; border-radius: 99px; font-size: 12px; font-weight: 500; }
+.matched { background: var(--forest-pale); color: var(--forest); }
+.partial { background: var(--gold-pale); color: var(--gold); }
+.missing { background: var(--paper-dark); color: var(--ink-muted); }
+.none { font-size: 12px; color: var(--ink-faint); font-style: italic; }
+.detailActions { display: flex; gap: 10px; padding-top: 4px; }
+
+@media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) {
+  .grid { grid-template-columns: 1fr; }
+  .detailSkills { grid-template-columns: 1fr; }
+}

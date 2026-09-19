@@ -1,0 +1,75 @@
+.page { display: flex; flex-direction: column; gap: 1.25rem; }
+.hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 1.5rem; padding: 0.25rem 0 0.5rem; }
+.eyebrow, .sectionKicker { display: flex; align-items: center; gap: 6px; color: var(--forest-light); font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.title { font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--ink); margin-top: 5px; }
+.sub { color: var(--ink-muted); font-size: 14px; margin-top: 5px; }
+.xpCard { display: flex; align-items: center; gap: 10px; background: var(--forest); color: var(--white); border-radius: var(--radius-lg); padding: 12px 16px; min-width: 170px; box-shadow: var(--shadow-sm); }
+.xpIcon { width: 32px; height: 32px; display: grid; place-items: center; color: #d9edb5; background: rgba(255,255,255,0.12); border-radius: 50%; }
+.xpCard div:last-child { display: flex; flex-direction: column; gap: 2px; }
+.xpCard strong { font-size: 16px; }
+.xpCard span { color: rgba(255,255,255,0.65); font-size: 11px; }
+.coursePicker { padding: 1.25rem; }
+.pickerHeading { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1rem; }
+.pickerHeading h2 { font-family: var(--font-display); font-size: 1.4rem; color: var(--ink); margin-top: 4px; }
+.pickerHeading > span { color: var(--ink-faint); font-size: 12px; }
+.courseOptions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.courseOption { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 11px 12px; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; text-align: left; color: var(--ink-mid); transition: border-color 0.15s, background 0.15s; }
+.courseOption:hover { border-color: var(--forest-light); background: var(--forest-pale); }
+.courseOption strong { font-size: 12px; line-height: 1.3; }
+.courseOption span { color: var(--ink-faint); font-size: 11px; }
+.courseOptionActive { background: var(--forest-pale); border-color: var(--forest); box-shadow: inset 3px 0 var(--forest); }
+.progressPanel { background: var(--paper); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+.progressCopy { display: flex; justify-content: space-between; color: var(--ink-mid); font-size: 13px; font-weight: 700; }
+.progressCopy strong { color: var(--forest); }
+.track { height: 8px; background: var(--paper-dark); border-radius: 99px; overflow: hidden; margin: 9px 0 7px; }
+.track span { display: block; height: 100%; background: var(--forest); border-radius: inherit; transition: width 0.25s ease; }
+.progressPanel p { color: var(--ink-muted); font-size: 12px; }
+.focusGrid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 1.25rem; }
+.nextCard, .challengeCard { padding: 1.35rem; }
+.sectionKicker { margin-bottom: 12px; }
+.nextCard h2, .challengeCard h2, .planHeading h2 { font-family: var(--font-display); font-size: 1.4rem; color: var(--ink); }
+.nextCard p, .challengeCard p { color: var(--ink-muted); font-size: 13px; line-height: 1.6; margin-top: 6px; }
+.nextCard p strong { color: var(--ink-mid); }
+.resourceColumns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+.resourceColumns > div { display: flex; flex-direction: column; gap: 5px; }
+.resourceColumns h3 { display: flex; align-items: center; gap: 5px; color: var(--ink-mid); font-family: var(--font-body); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+.resourceColumns a { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 9px; color: var(--forest); background: var(--forest-pale); border-radius: 6px; font-size: 11px; line-height: 1.3; }
+.resourceColumns a:hover { background: var(--paper-dark); }
+.challengeCard { background: var(--forest-pale); border-color: #d4e2c9; }
+.challengeCard .sectionKicker { color: var(--forest); }
+.challengeCard h2 { color: var(--forest); }
+.doneButton { color: var(--forest); border-color: var(--forest-light); background: var(--white); }
+.planSection { display: flex; flex-direction: column; gap: 1rem; }
+.planHeading { display: flex; justify-content: space-between; align-items: flex-end; }
+.planHeading h2 { font-size: 1.65rem; margin-top: 4px; }
+.topicCount { color: var(--ink-faint); font-size: 12px; }
+.modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: start; }
+.module { padding: 0; overflow: hidden; }
+.moduleHeader { display: flex; gap: 11px; align-items: flex-start; padding: 1.1rem 1.15rem; border-bottom: 1px solid var(--border-light); }
+.moduleNumber { color: var(--forest-light); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; }
+.moduleHeader h3 { font-family: var(--font-body); font-size: 14px; font-weight: 700; color: var(--ink); }
+.moduleHeader span { display: block; color: var(--ink-faint); font-size: 11px; margin-top: 3px; }
+.topicList { padding: 6px 10px 10px; }
+.topic { display: flex; align-items: center; gap: 8px; min-height: 40px; border-bottom: 1px solid var(--border-light); }
+.topic:last-child { border-bottom: 0; }
+.topicCheck { width: 22px; height: 22px; display: grid; place-items: center; flex-shrink: 0; background: none; color: var(--forest); }
+.topicCheck span { width: 15px; height: 15px; border: 1.5px solid var(--border); border-radius: 50%; }
+.topicCheck:hover span { border-color: var(--forest); }
+.topicName { flex: 1; color: var(--ink-mid); font-size: 12.5px; background: none; border: 0; padding: 6px 0; text-align: left; }
+.topicName:hover, .topicSelected { color: var(--forest); }
+.topicDone .topicName { color: var(--forest); text-decoration: line-through; opacity: 0.65; }
+.topicLinks { display: flex; align-items: center; gap: 3px; }
+.topicLinks a, .topicLinks button { width: 26px; height: 26px; display: grid; place-items: center; color: var(--ink-faint); border-radius: 6px; background: none; border: 0; font-size: 10px; }
+.topicLinks button { width: auto; padding: 0 5px; color: var(--forest); font-weight: 700; }
+.topicLinks a:hover, .topicLinks button:hover { color: var(--forest); background: var(--forest-pale); }
+
+@media (max-width: 900px) { .modules { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 680px) {
+  .hero { align-items: flex-start; flex-direction: column; }
+  .title { font-size: 1.75rem; }
+  .xpCard { width: 100%; }
+  .focusGrid, .modules { grid-template-columns: 1fr; }
+  .pickerHeading { align-items: flex-start; flex-direction: column; }
+  .courseOptions { grid-template-columns: 1fr 1fr; }
+  .resourceColumns { grid-template-columns: 1fr; }
+}

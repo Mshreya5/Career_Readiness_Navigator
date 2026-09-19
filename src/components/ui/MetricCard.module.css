@@ -1,0 +1,16 @@
+.card { display: flex; flex-direction: column; gap: 4px; }
+.icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 6px;
+}
+.forest { background: var(--forest-pale); color: var(--forest); }
+.terra  { background: var(--terra-pale);  color: var(--terra); }
+.gold   { background: var(--gold-pale);   color: var(--gold); }
+.slate  { background: var(--slate-pale);  color: var(--slate); }
+.sage   { background: var(--sage-pale);   color: var(--sage); }
+
+.value { font-size: 1.75rem; font-weight: 700; color: var(--ink); line-height: 1; }
+.label { font-size: 13px; font-weight: 500; color: var(--ink-muted); }
+.sub   { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }

@@ -1,0 +1,57 @@
+.page { display: flex; flex-direction: column; gap: 1.5rem; }
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 600; }
+.sub { font-size: 14px; color: var(--ink-muted); margin-top: 4px; }
+.cardTitle { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+
+.top { display: grid; grid-template-columns: 280px 1fr; gap: 1.25rem; align-items: start; }
+
+.scoreCard { }
+.donutWrap { position: relative; }
+.donutCenter {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center; pointer-events: none;
+}
+.donutScore { display: block; font-size: 2rem; font-weight: 800; color: var(--forest); line-height: 1; }
+.donutLabel { font-size: 11px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.legend { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.legendRow { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-muted); }
+.legendDot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legendCount { margin-left: auto; font-weight: 700; color: var(--ink); }
+
+.domainsCard { }
+.domainList { display: flex; flex-direction: column; gap: 14px; }
+.domainRow { display: flex; flex-direction: column; gap: 6px; }
+.domainMeta { display: flex; justify-content: space-between; }
+.domainLabel { font-size: 13px; font-weight: 500; color: var(--ink-mid); }
+.domainPct { font-size: 13px; font-weight: 700; color: var(--ink); }
+
+.breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+
+.skillGroup { }
+.groupHeader { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 1rem; }
+.groupIcon { color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+.groupTitle { font-size: 14px; font-weight: 700; color: var(--ink); }
+.groupCount { font-weight: 400; color: var(--ink-faint); }
+.groupDesc { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+.skillPills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { display: flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 500; }
+.matched { background: var(--forest-pale); color: var(--forest); }
+.partial  { background: var(--gold-pale);   color: var(--gold); }
+.missing  { background: var(--terra-pale);  color: var(--terra); }
+.pillLevel { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.7; }
+.none { font-size: 13px; color: var(--ink-faint); font-style: italic; }
+
+.recs { }
+.recList { display: flex; flex-direction: column; gap: 10px; }
+.recItem { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--ink-muted); }
+.recDot { width: 8px; height: 8px; border-radius: 50%; background: var(--terra); flex-shrink: 0; margin-top: 6px; }
+
+@media (max-width: 1000px) {
+  .top { grid-template-columns: 1fr; }
+  .breakdown { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .breakdown { grid-template-columns: 1fr; }
+}

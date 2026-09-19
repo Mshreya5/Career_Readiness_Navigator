@@ -1,0 +1,76 @@
+.page { display: flex; flex-direction: column; gap: 1.75rem; }
+
+.header {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+  flex-wrap: wrap;
+}
+.greeting { font-family: var(--font-display); font-size: 1.75rem; font-weight: 600; color: var(--ink); }
+.greetingSub { font-size: 14px; color: var(--ink-muted); margin-top: 4px; }
+
+.metrics { margin-bottom: 0; }
+
+.body { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; align-items: start; }
+.left  { display: flex; flex-direction: column; gap: 1.25rem; }
+.right { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.cardTitle { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 1rem; }
+.cardTitleRow { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.cardTitleRow .cardTitle { margin-bottom: 0; }
+.seeAll { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--forest); }
+.seeAll:hover { text-decoration: underline; }
+
+/* Donut */
+.donutCard { }
+.donutWrap { position: relative; }
+.donutCenter {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center; pointer-events: none;
+}
+.donutScore { display: block; font-size: 1.6rem; font-weight: 800; color: var(--forest); line-height: 1; }
+.donutLabel { font-size: 11px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.donutLegend { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.legendItem { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-muted); }
+.legendDot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legendVal { margin-left: auto; font-weight: 600; color: var(--ink); }
+
+/* Phase */
+.phaseBlock { display: flex; flex-direction: column; gap: 10px; }
+.phaseMeta { display: flex; align-items: center; gap: 10px; }
+.phaseDur { font-size: 12px; color: var(--ink-faint); }
+.phaseTitle { font-size: 15px; font-weight: 600; color: var(--ink); }
+.milestoneList { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.milestoneList li { display: flex; align-items: flex-start; gap: 7px; font-size: 13px; color: var(--ink-muted); }
+.milestoneList li svg { flex-shrink: 0; margin-top: 2px; color: var(--ink-faint); }
+.milestoneDone { color: var(--forest) !important; }
+.milestoneDone svg { color: var(--forest) !important; }
+
+/* Skills */
+.skillSection { margin-bottom: 1rem; }
+.skillSection:last-child { margin-bottom: 0; }
+.skillSectionLabel { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-faint); margin-bottom: 7px; }
+.skillBadges { display: flex; flex-wrap: wrap; gap: 6px; }
+.none { font-size: 13px; color: var(--ink-faint); font-style: italic; }
+.more { font-size: 12px; color: var(--ink-faint); align-self: center; }
+
+/* Activity */
+.activityList { list-style: none; display: flex; flex-direction: column; gap: 0; }
+.activityItem { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border-light); }
+.activityItem:last-child { border-bottom: none; }
+.activityIcon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--forest-pale); color: var(--forest);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.activityText { display: flex; flex-direction: column; gap: 2px; }
+.activityText span:first-child { font-size: 13px; color: var(--ink-mid); }
+.activityTime { font-size: 11px; color: var(--ink-faint); }
+
+/* Actions */
+.actions { display: flex; flex-direction: column; gap: 8px; }
+.actionBtn { justify-content: flex-start; }
+
+@media (max-width: 1100px) {
+  .body { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,37 @@
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.stat-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.stat-value { font-size: 1.3rem; font-weight: 700; }
+.stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+.card-title { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+
+.current-phase .phase-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.phase-duration { font-size: 0.8rem; color: var(--text-muted); }
+.current-phase h4 { margin-bottom: 0.75rem; }
+
+.topic-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.topic-list li {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.875rem; color: var(--text-muted);
+}
+.topic-list li.done { color: var(--success); }
+.topic-list li.done svg { color: var(--success); }
+
+.skill-row { margin-bottom: 0.75rem; }
+.skill-row-header {
+  display: flex; justify-content: space-between;
+  font-size: 0.85rem; margin-bottom: 0.3rem;
+}
+.skill-pct { color: var(--text-muted); font-size: 0.8rem; }
