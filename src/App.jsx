@@ -16,7 +16,17 @@ import Tutor from './pages/Tutor.jsx'
 
 function PrivateRoute({ children }) {
   const { user } = useApp()
-  return user ? children : <Navigate to="/login" replace />
+  const sessionUser = (() => {
+    try {
+      const r = sessionStorage.getItem('careernova_session') || localStorage.getItem('careernova_session')
+      return r ? JSON.parse(r)?.user : null
+    } catch {
+      return null
+    }
+  })()
+
+  const activeUser = user || sessionUser
+  return activeUser ? children : <Navigate to="/login" replace />
 }
 
 export default function App() {
@@ -24,21 +34,21 @@ export default function App() {
     <BrowserRouter>
       <ToastContainer />
       <Routes>
-        <Route path="/"        element={<Landing />} />
-        <Route path="/login"   element={<Login />} />
-        <Route path="/signup"  element={<Signup />} />
-        <Route path="/dashboard"  element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-        <Route path="/careers"    element={<PrivateRoute><Careers /></PrivateRoute>} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/careers" element={<PrivateRoute><Careers /></PrivateRoute>} />
         <Route path="/career-selection" element={<PrivateRoute><Careers /></PrivateRoute>} />
         <Route path="/assessment" element={<PrivateRoute><Assessment /></PrivateRoute>} />
         <Route path="/skill-assessment" element={<PrivateRoute><Assessment /></PrivateRoute>} />
-        <Route path="/skill-gap"  element={<PrivateRoute><SkillGap /></PrivateRoute>} />
-        <Route path="/roadmap"    element={<PrivateRoute><Roadmap /></PrivateRoute>} />
-        <Route path="/tutor"      element={<PrivateRoute><Tutor /></PrivateRoute>} />
-        <Route path="/progress"   element={<PrivateRoute><Progress /></PrivateRoute>} />
-        <Route path="/profile"    element={<PrivateRoute><Profile /></PrivateRoute>} />
-        <Route path="/settings"   element={<PrivateRoute><Settings /></PrivateRoute>} />
-        <Route path="*"           element={<Navigate to="/" replace />} />
+        <Route path="/skill-gap" element={<PrivateRoute><SkillGap /></PrivateRoute>} />
+        <Route path="/roadmap" element={<PrivateRoute><Roadmap /></PrivateRoute>} />
+        <Route path="/tutor" element={<PrivateRoute><Tutor /></PrivateRoute>} />
+        <Route path="/progress" element={<PrivateRoute><Progress /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+        <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )

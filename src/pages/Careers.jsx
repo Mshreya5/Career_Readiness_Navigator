@@ -5,26 +5,27 @@ import CareerCard from '../components/CareerCard.jsx'
 import Modal from '../components/ui/Modal.jsx'
 import ProgressBar from '../components/ui/ProgressBar.jsx'
 import { useApp } from '../context/AppContext.jsx'
-import { CAREERS, computeSkillMatch } from '../data/mockData.js'
+import { computeSkillMatch } from '../data/mockData.js'
 import styles from './Careers.module.css'
 
-const CATEGORIES = ['All', ...Array.from(new Set(CAREERS.map(c => c.category)))]
 const DEMANDS = ['All', 'Very High', 'High', 'Medium', 'Low']
 
 export default function Careers() {
-  const { user, skills, selectCareer } = useApp()
+  const { user, skills, careers, selectCareer } = useApp()
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('All')
   const [demand, setDemand] = useState('All')
   const [selected, setSelected] = useState(null)
 
-  const filtered = useMemo(() => CAREERS.filter(c => {
+  const categories = useMemo(() => ['All', ...Array.from(new Set(careers.map(c => c.category)))], [careers])
+
+  const filtered = useMemo(() => careers.filter(c => {
     const q = query.toLowerCase()
-    const matchQ = !q || c.title.toLowerCase().includes(q) || c.category.toLowerCase().includes(q) || c.skills.some(s => s.toLowerCase().includes(q))
+    const matchQ = !q || c.title.toLowerCase().includes(q) || (c.category && c.category.toLowerCase().includes(q)) || (c.skills && c.skills.some(s => s.toLowerCase().includes(q)))
     const matchC = category === 'All' || c.category === category
     const matchD = demand === 'All' || c.demand === demand
     return matchQ && matchC && matchD
-  }), [query, category, demand])
+  }), [careers, query, category, demand])
 
   function handleSelect(careerId) {
     selectCareer(careerId)
@@ -43,7 +44,6 @@ export default function Careers() {
           </div>
         </div>
 
-        {/* Filters */}
         <div className={styles.filters}>
           <div className={styles.searchWrap}>
             <Search size={16} className={styles.searchIcon} />
@@ -57,7 +57,7 @@ export default function Careers() {
             {query && <button className={styles.clearBtn} onClick={() => setQuery('')} aria-label="Clear search"><X size={14} /></button>}
           </div>
           <div className={styles.filterGroup}>
-            {CATEGORIES.map(c => (
+            {categories.map(c => (
               <button key={c} className={`${styles.filterBtn} ${category === c ? styles.filterActive : ''}`} onClick={() => setCategory(c)}>{c}</button>
             ))}
           </div>
@@ -73,28 +73,27 @@ export default function Careers() {
         <div className={styles.grid}>
           {filtered.map(c => (
             <CareerCard
-              key={c.id}
+              key={c.id || c._id}
               career={c}
-              isSelected={user?.targetCareerId === c.id}
+              isSelected={(user?.selectedCareer?._id || user?.selectedCareer || user?.targetCareerId) === (c.id || c._id)}
               onClick={() => setSelected(c)}
             />
           ))}
         </div>
 
-        {/* Detail modal */}
         <Modal open={!!selected} onClose={() => setSelected(null)} title={selected?.title || ''} width={620}>
           {selected && detailMatch && (
             <div className={styles.detail}>
               <div className={styles.detailTop}>
-                <span className={styles.detailIcon}>{selected.icon}</span>
+                <span className={styles.detailIcon}>{selected.icon || '⚡'}</span>
                 <div>
-                  <p className={styles.detailCategory}>{selected.category}</p>
+                  <p className={styles.detailCategory}>{selected.category || 'Engineering'}</p>
                   <p className={styles.detailDesc}>{selected.description}</p>
                 </div>
               </div>
               <div className={styles.detailMeta}>
-                <span><DollarSign size={14} />{selected.salary}</span>
-                <span><TrendingUp size={14} />{selected.demand} demand</span>
+                <span><DollarSign size={14} />{selected.salary || '$95,000 - $140,000'}</span>
+                <span><TrendingUp size={14} />{selected.demand || 'High'} demand</span>
               </div>
               <div className={styles.detailMatch}>
                 <div className={styles.detailMatchHeader}>
@@ -123,10 +122,10 @@ export default function Careers() {
               <div className={styles.detailActions}>
                 <button
                   className="btn btn-primary"
-                  onClick={() => handleSelect(selected.id)}
-                  disabled={user?.targetCareerId === selected.id}
+                  onClick={() => handleSelect(selected.id || selected._id)}
+                  disabled={(user?.selectedCareer?._id || user?.selectedCareer || user?.targetCareerId) === (selected.id || selected._id)}
                 >
-                  {user?.targetCareerId === selected.id ? '✓ Current target' : 'Set as target career'}
+                  {(user?.selectedCareer?._id || user?.selectedCareer || user?.targetCareerId) === (selected.id || selected._id) ? '✓ Current target' : 'Set as target career'}
                 </button>
                 <button className="btn btn-ghost" onClick={() => setSelected(null)}>Close</button>
               </div>

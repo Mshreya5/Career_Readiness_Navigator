@@ -1,6 +1,7 @@
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
-import { CheckCircle, AlertCircle, XCircle, ArrowRight } from 'lucide-react'
+import { CheckCircle, AlertCircle, XCircle, ArrowRight, Sparkles, Loader2 } from 'lucide-react'
 import AppLayout from '../components/layout/AppLayout.jsx'
 import ProgressBar from '../components/ui/ProgressBar.jsx'
 import { useApp } from '../context/AppContext.jsx'
@@ -8,23 +9,42 @@ import { SKILL_CATEGORIES, computeSkillMatch, getProficiency } from '../data/moc
 import styles from './SkillGap.module.css'
 
 export default function SkillGap() {
-  const { skills, targetCareer } = useApp()
-  const match = computeSkillMatch(skills, targetCareer)
+  const { user, skills, targetCareer, analysis, recommendations, runSkillGapAnalysis, loading } = useApp()
+  const [analyzing, setAnalyzing] = useState(false)
+  const ranRef = useRef(null)
 
-  // Domain breakdown
+  const matchFallback = computeSkillMatch(skills, targetCareer)
+
+  const activeScore = analysis?.matchPercentage ?? matchFallback.score
+  const activeMatched = analysis?.matchedSkills ?? matchFallback.matched
+  const activePartial = analysis?.partialSkills ?? matchFallback.partial
+  const activeMissing = analysis?.missingSkills ?? matchFallback.missing
+  const activePriorities = analysis?.priorities ?? []
+
+  useEffect(() => {
+    const sId = user?._id || user?.id
+    const cId = user?.selectedCareer?._id || user?.selectedCareer || user?.targetCareerId || targetCareer?.id || targetCareer?._id
+    const key = `${sId}_${cId}`
+    if (sId && cId && ranRef.current !== key) {
+      ranRef.current = key
+      setAnalyzing(true)
+      runSkillGapAnalysis(sId, cId).finally(() => setAnalyzing(false))
+    }
+  }, [user, targetCareer, runSkillGapAnalysis])
+
   const domains = SKILL_CATEGORIES.map(cat => {
     const catSkills = cat.skills
-    const relevant = targetCareer ? catSkills.filter(s => targetCareer.skills.includes(s)) : catSkills
+    const relevant = targetCareer ? (targetCareer.skills || targetCareer.requiredSkills || []).filter(s => catSkills.includes(s)) : catSkills
     if (!relevant.length) return null
     const scored = relevant.map(s => getProficiency(skills[s] || 'none').score)
-    const avg = Math.round(scored.reduce((a, b) => a + b, 0) / scored.length)
+    const avg = Math.round(scored.reduce((a, b) => a + b, 0) / Math.max(scored.length, 1))
     return { label: cat.label, avg, count: relevant.length }
   }).filter(Boolean)
 
   const donutData = [
-    { name: 'Matched',  value: match.matched.length || 0,  color: 'var(--forest)' },
-    { name: 'Partial',  value: match.partial.length || 0,  color: 'var(--gold)' },
-    { name: 'Missing',  value: match.missing.length || 0,  color: 'var(--terra)' },
+    { name: 'Matched', value: activeMatched.length || 0, color: 'var(--forest)' },
+    { name: 'Partial', value: activePartial.length || 0, color: 'var(--gold)' },
+    { name: 'Missing', value: activeMissing.length || 0, color: 'var(--terra)' },
   ]
 
   if (!targetCareer) return (
@@ -47,11 +67,17 @@ export default function SkillGap() {
             <h1 className={styles.title}>Skill Gap Analysis</h1>
             <p className={styles.sub}>Your readiness for <strong>{targetCareer.title}</strong></p>
           </div>
-          <Link to="/assessment" className="btn btn-secondary btn-sm">Update Skills <ArrowRight size={14} /></Link>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            {(analyzing || loading) && (
+              <span style={{ fontSize: '0.85rem', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Loader2 size={14} className="spin" /> Analyzing your skills…
+              </span>
+            )}
+            <Link to="/assessment" className="btn btn-secondary btn-sm">Update Skills <ArrowRight size={14} /></Link>
+          </div>
         </div>
 
         <div className={styles.top}>
-          {/* Score */}
           <div className={`card ${styles.scoreCard}`}>
             <h3 className={styles.cardTitle}>Readiness Score</h3>
             <div className={styles.donutWrap}>
@@ -63,7 +89,7 @@ export default function SkillGap() {
                 </PieChart>
               </ResponsiveContainer>
               <div className={styles.donutCenter}>
-                <span className={styles.donutScore}>{match.score}%</span>
+                <span className={styles.donutScore}>{activeScore}%</span>
                 <span className={styles.donutLabel}>ready</span>
               </div>
             </div>
@@ -78,7 +104,6 @@ export default function SkillGap() {
             </div>
           </div>
 
-          {/* Domain bars */}
           <div className={`card ${styles.domainsCard}`}>
             <h3 className={styles.cardTitle}>Domain Proficiency</h3>
             <div className={styles.domainList}>
@@ -99,13 +124,12 @@ export default function SkillGap() {
           </div>
         </div>
 
-        {/* Skill breakdown */}
         <div className={styles.breakdown}>
           <SkillGroup
             icon={<CheckCircle size={16} />}
             title="Matched Skills"
             desc="You meet or exceed the required level."
-            skills={match.matched}
+            skills={activeMatched}
             userSkills={skills}
             colorClass={styles.matched}
             accent="var(--forest)"
@@ -113,8 +137,8 @@ export default function SkillGap() {
           <SkillGroup
             icon={<AlertCircle size={16} />}
             title="Developing Skills"
-            desc="You have some knowledge but need to grow."
-            skills={match.partial}
+            desc="You have partial knowledge."
+            skills={activePartial}
             userSkills={skills}
             colorClass={styles.partial}
             accent="var(--gold)"
@@ -122,34 +146,52 @@ export default function SkillGap() {
           <SkillGroup
             icon={<XCircle size={16} />}
             title="Priority Gaps"
-            desc="These skills are required but not yet started."
-            skills={match.missing}
+            desc="Required skills prioritized by prerequisites."
+            skills={activeMissing}
             userSkills={skills}
+            priorities={activePriorities}
             colorClass={styles.missing}
             accent="var(--terra)"
           />
         </div>
 
-        {/* Recommendations */}
-        {match.missing.length > 0 && (
-          <div className={`card ${styles.recs}`}>
-            <h3 className={styles.cardTitle}>Recommended Actions</h3>
-            <ul className={styles.recList}>
-              {match.missing.slice(0, 3).map(s => (
-                <li key={s} className={styles.recItem}>
-                  <span className={styles.recDot} />
-                  <span>Start learning <strong>{s}</strong> — it's a required skill for {targetCareer.title}.</span>
-                </li>
-              ))}
-              {match.partial.slice(0, 2).map(s => (
-                <li key={s} className={styles.recItem}>
-                  <span className={styles.recDot} style={{ background: 'var(--gold)' }} />
-                  <span>Deepen your <strong>{s}</strong> skills from Developing to Proficient.</span>
-                </li>
-              ))}
-            </ul>
+        {recommendations && (
+          <div className={`card ${styles.recs}`} style={{ marginTop: '1.5rem', borderLeft: '4px solid #6366f1' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              <Sparkles size={18} style={{ color: '#6366f1' }} />
+              <h3 className={styles.cardTitle} style={{ margin: 0 }}>Gemini AI Recommendations</h3>
+            </div>
+            <p style={{ color: 'var(--ink-muted)', marginBottom: '1rem', fontSize: '0.95rem', lineHeight: '1.5' }}>
+              {recommendations.summary}
+            </p>
+
+            {recommendations.learningOrder && recommendations.learningOrder.length > 0 && (
+              <div style={{ marginBottom: '1rem', background: '#f8fafc', padding: '0.75rem 1rem', borderRadius: '6px' }}>
+                <strong style={{ fontSize: '0.85rem', color: 'var(--ink)' }}>Recommended Learning Order:</strong>
+                <ol style={{ margin: '0.5rem 0 0 1.25rem', padding: 0, fontSize: '0.9rem' }}>
+                  {recommendations.learningOrder.map((s, idx) => (
+                    <li key={idx} style={{ margin: '0.25rem 0' }}>{s}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {recommendations.recommendations && (
+              <ul className={styles.recList}>
+                {recommendations.recommendations.map((r, i) => (
+                  <li key={i} className={styles.recItem}>
+                    <span className={styles.recDot} style={{ background: r.priority === 'High' ? 'var(--terra)' : 'var(--gold)' }} />
+                    <div>
+                      <strong>{r.skill}</strong> ({r.priority} Priority): {r.reason}
+                      {r.nextStep && <div style={{ fontSize: '0.85rem', color: 'var(--ink-muted)', marginTop: '0.2rem' }}>💡 Next step: {r.nextStep}</div>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+
             <Link to="/roadmap" className="btn btn-primary btn-sm" style={{ marginTop: '1rem' }}>
-              View your roadmap <ArrowRight size={14} />
+              View your personalized roadmap <ArrowRight size={14} />
             </Link>
           </div>
         )}
@@ -158,7 +200,10 @@ export default function SkillGap() {
   )
 }
 
-function SkillGroup({ icon, title, desc, skills, userSkills, colorClass, accent }) {
+function SkillGroup({ icon, title, desc, skills, userSkills, priorities = [], colorClass, accent }) {
+  const prioMap = {}
+  priorities.forEach(p => { prioMap[p.skill] = p.priority })
+
   return (
     <div className={`card ${styles.skillGroup}`}>
       <div className={styles.groupHeader} style={{ '--accent': accent }}>
@@ -172,7 +217,8 @@ function SkillGroup({ icon, title, desc, skills, userSkills, colorClass, accent 
         {skills.length ? skills.map(s => (
           <span key={s} className={`${styles.pill} ${colorClass}`}>
             {s}
-            {userSkills[s] && <span className={styles.pillLevel}>{getProficiency(userSkills[s]).label}</span>}
+            {prioMap[s] && <span className={styles.pillLevel} style={{ fontWeight: 600 }}>{prioMap[s]}</span>}
+            {!prioMap[s] && userSkills[s] && <span className={styles.pillLevel}>{getProficiency(userSkills[s]).label}</span>}
           </span>
         )) : <span className={styles.none}>None</span>}
       </div>

@@ -9,19 +9,35 @@ import {
 import './Progress.css'
 
 export default function Progress() {
-  const { roadmap, skills, targetCareer } = useApp()
-  const skillBarData = useMemo(() => (targetCareer?.skills || []).map(name => ({
-    name,
-    Current: getProficiency(skills[name]).score,
-    Required: 80,
-  })), [skills, targetCareer])
+  const { roadmap, backendRoadmap, skills, targetCareer, analysis, assessments } = useApp()
+
+  const careerSkills = targetCareer?.requiredSkills || targetCareer?.skills || ['JavaScript', 'Python', 'React', 'Node.js', 'SQL']
+
+  const skillBarData = useMemo(() => {
+    const requiredList = targetCareer?.requiredSkills || targetCareer?.skills || []
+    return requiredList.map(name => ({
+      name,
+      Current: getProficiency(skills[name]).score,
+      Required: 80,
+    }))
+  }, [skills, targetCareer])
+
   const progressData = WEEKLY_ACTIVITY.map(day => ({
     week: day.day,
     progress: Math.round(day.hours * 20),
   }))
-  const completed = roadmap.filter(phase => phase.status === 'completed').length
-  const inProgress = roadmap.filter(phase => phase.status === 'in-progress').length
-  const match = computeSkillMatch(skills, targetCareer)
+
+  const matchFallback = computeSkillMatch(skills, targetCareer)
+  const activeScore = analysis?.matchPercentage ?? matchFallback.score
+
+  const backendMilestones = backendRoadmap?.milestones || []
+  const completed = backendMilestones.length > 0
+    ? backendMilestones.filter(m => m.status === 'Completed').length
+    : roadmap.filter(phase => phase.status === 'completed').length
+
+  const inProgress = backendMilestones.length > 0
+    ? backendMilestones.filter(m => m.status === 'In Progress').length
+    : roadmap.filter(phase => phase.status === 'in-progress').length
 
   return (
     <AppLayout>
@@ -32,12 +48,12 @@ export default function Progress() {
 
       <div className="grid-3" style={{ marginBottom: '1.5rem' }}>
         <div className="card progress-stat">
-          <div className="progress-stat-value" style={{ color: 'var(--forest)' }}>{match.score}%</div>
+          <div className="progress-stat-value" style={{ color: 'var(--forest)' }}>{activeScore}%</div>
           <div className="progress-stat-label">Skill Match</div>
         </div>
         <div className="card progress-stat">
           <div className="progress-stat-value" style={{ color: 'var(--success)' }}>{completed}</div>
-          <div className="progress-stat-label">Phases Completed</div>
+          <div className="progress-stat-label">Milestones Completed</div>
         </div>
         <div className="card progress-stat">
           <div className="progress-stat-value" style={{ color: 'var(--warning)' }}>{inProgress}</div>
@@ -47,7 +63,7 @@ export default function Progress() {
 
       <div className="grid-2">
         <div className="card">
-          <h3 className="card-title">Weekly Progress</h3>
+          <h3 className="card-title">Weekly Activity</h3>
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={progressData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -72,6 +88,32 @@ export default function Progress() {
               <Bar dataKey="Required" fill="var(--sand)" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="card" style={{ marginTop: '1.5rem' }}>
+        <h3 className="card-title" style={{ marginBottom: '1rem' }}>SKILL CONFIDENCE &amp; ASSESSMENT EVIDENCE</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {careerSkills.map(sk => {
+            const rec = (assessments || []).find(a => a.skill?.toLowerCase() === sk.toLowerCase())
+            const score = rec ? rec.percentage : null
+            return (
+              <div key={sk} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#FAF8F5', border: '1px solid #EAE5DC', borderRadius: '8px' }}>
+                <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--ink)' }}>{sk}</div>
+                <div>
+                  {rec ? (
+                    <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--forest)' }}>
+                      ✓ Assessment completed · {score}% ({rec.skillLevel})
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: '0.85rem', color: 'var(--ink-faint)', fontStyle: 'italic' }}>
+                      Not assessed — skill match based on profile information
+                    </span>
+                  )}
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </AppLayout>
