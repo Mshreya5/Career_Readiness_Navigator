@@ -102,12 +102,53 @@ const getSkillGap = async (req, res) => {
  */
 const getRecommendations = async (req, res) => {
   try {
-    const { career, matchedSkills, missingSkills, partialSkills, priorities } = req.body;
+    const { studentId, careerId, career, matchedSkills, missingSkills, partialSkills, priorities } = req.body;
+
+    // Support the frontend flow: studentId + careerId are resolved from MongoDB,
+    // then passed through the SAME Member 3 services (no duplicated logic).
+    if (!career && studentId && careerId) {
+      if (!mongoose.Types.ObjectId.isValid(studentId)) {
+        return res.status(400).json({ error: 'Validation Error', message: 'Invalid studentId format.' });
+      }
+      if (!mongoose.Types.ObjectId.isValid(careerId)) {
+        return res.status(400).json({ error: 'Validation Error', message: 'Invalid careerId format.' });
+      }
+
+      const student = await User.findById(studentId);
+      if (!student) {
+        return res.status(404).json({ error: 'Not Found', message: 'Student not found.' });
+      }
+
+      const careerDoc = await Career.findById(careerId);
+      if (!careerDoc) {
+        return res.status(404).json({ error: 'Not Found', message: 'Career not found.' });
+      }
+
+      const uniqueStudentSkills = [...new Set(student.skills || [])];
+      const uniqueCareerSkills = [...new Set(careerDoc.requiredSkills || [])];
+
+      const gapAnalysis = calculateSkillGap(uniqueStudentSkills, uniqueCareerSkills);
+      const computedPriorities = calculateSkillPriorities(
+        gapAnalysis.missingSkills,
+        careerDoc.title,
+        gapAnalysis.matchedSkills
+      );
+
+      const recommendations = await generateRecommendations({
+        career: careerDoc.title,
+        matchedSkills: gapAnalysis.matchedSkills,
+        missingSkills: gapAnalysis.missingSkills,
+        partialSkills: gapAnalysis.partialSkills,
+        priorities: computedPriorities
+      });
+
+      return res.status(200).json(recommendations);
+    }
 
     if (!career) {
       return res.status(400).json({
         error: 'Validation Error',
-        message: 'Career title is required.'
+        message: 'Career title is required (or provide studentId and careerId).'
       });
     }
 
