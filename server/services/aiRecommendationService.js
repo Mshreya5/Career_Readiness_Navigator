@@ -1,15 +1,5 @@
-/**
- * AI Recommendation Service
- * Uses Google Gemini API (@google/generative-ai) to generate personalized learning explanations, 
- * recommendations, reasons, and next steps based on deterministic skill gap analysis.
- * Includes a deterministic offline fallback when AI API key is missing or call fails.
- */
-
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-/**
- * Deterministic fallback generator (works 100% offline without AI API key)
- */
 function generateFallbackRecommendations({ career = '', matchedSkills = [], missingSkills = [], partialSkills = [], priorities = [] }) {
   const priorityRank = { 'High': 1, 'Medium': 2, 'Low': 3 };
   const sortedPriorities = [...priorities].sort((a, b) =>
@@ -54,15 +44,11 @@ function generateFallbackRecommendations({ career = '', matchedSkills = [], miss
   };
 }
 
-/**
- * Generate AI-based recommendations or fallback
- */
 async function generateRecommendations(analysisData) {
-  const apiKey = process.env.AI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY || process.env.AI_API_KEY;
   const modelName = process.env.AI_MODEL || 'gemini-1.5-flash';
 
-  // Fallback if API key is not configured or default placeholder
-  if (!apiKey || apiKey.trim() === '' || apiKey === 'your_gemini_api_key_here') {
+  if (!apiKey || apiKey.trim() === '' || apiKey === 'your_gemini_api_key_here' || apiKey === 'your_actual_gemini_api_key_here') {
     return generateFallbackRecommendations(analysisData);
   }
 
@@ -122,7 +108,66 @@ Respond strictly with valid JSON. Do not include markdown code block formatting.
   }
 }
 
+async function generateAssessmentFeedback({ skill, percentage, skillLevel, weakTopics = [] }) {
+  const defaultFeedback = {
+    feedback: percentage >= 70
+      ? `Great job! Your ${skill} fundamentals are developing well with a ${percentage}% score (${skillLevel}).`
+      : `Your ${skill} skills are at the ${skillLevel} level (${percentage}%). Focus next on core concepts and practical exercises.`,
+    recommendedTopics: weakTopics.length > 0 ? weakTopics : [`${skill} Advanced Concepts`, `${skill} Best Practices`],
+    nextSteps: [
+      `Review key ${skill} documentation and topics where points were missed.`,
+      `Complete 2-3 practical coding exercises focusing on ${skill}.`,
+      `Re-assess your ${skill} knowledge in 1-2 weeks.`
+    ]
+  }
+
+  const apiKey = process.env.GEMINI_API_KEY || process.env.AI_API_KEY
+  const modelName = process.env.AI_MODEL || 'gemini-1.5-flash'
+
+  if (!apiKey || apiKey.trim() === '' || apiKey === 'your_gemini_api_key_here' || apiKey === 'your_actual_gemini_api_key_here') {
+    return defaultFeedback
+  }
+
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey)
+    const model = genAI.getGenerativeModel({
+      model: modelName,
+      generationConfig: { responseMimeType: 'application/json' }
+    })
+
+    const prompt = `
+You are CareerNova's AI Skill Evaluator.
+A student completed a skill assessment for "${skill}" with:
+- Score Percentage: ${percentage}%
+- Skill Level: ${skillLevel}
+- Missed/Weak Topics: ${JSON.stringify(weakTopics)}
+
+Provide constructive, encouraging feedback without modifying the score.
+Generate a JSON object in this exact format:
+{
+  "feedback": "2-3 sentences of encouraging, actionable feedback.",
+  "recommendedTopics": ["Topic 1", "Topic 2"],
+  "nextSteps": ["Step 1", "Step 2"]
+}
+Respond strictly with valid JSON.
+`
+
+    const result = await model.generateContent(prompt)
+    const responseText = result && result.response ? result.response.text().trim() : ''
+    const cleanJsonText = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '')
+    const parsedData = JSON.parse(cleanJsonText)
+
+    if (parsedData.feedback && Array.isArray(parsedData.recommendedTopics)) {
+      return parsedData
+    }
+    return defaultFeedback
+  } catch {
+    return defaultFeedback
+  }
+}
+
 module.exports = {
   generateRecommendations,
-  generateFallbackRecommendations
+  generateFallbackRecommendations,
+  generateAssessmentFeedback
 };

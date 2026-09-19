@@ -1,19 +1,15 @@
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const Career = require('../models/Career');
+const Assessment = require('../models/Assessment');
 const { calculateSkillGap } = require('../services/skillMatchingService');
 const { calculateSkillPriorities } = require('../services/priorityService');
 const { generateRecommendations } = require('../services/aiRecommendationService');
 
-/**
- * Controller: POST /api/analysis/skill-gap
- * Calculates deterministic skill gap analysis and priorities between student skills and career required skills
- */
 const getSkillGap = async (req, res) => {
   try {
     const { studentId, careerId } = req.body;
 
-    // 1. Validation for missing fields
     if (!studentId || !careerId) {
       return res.status(400).json({
         error: 'Validation Error',
@@ -21,7 +17,6 @@ const getSkillGap = async (req, res) => {
       });
     }
 
-    // 2. Validation for valid Mongoose ObjectIds
     if (!mongoose.Types.ObjectId.isValid(studentId)) {
       return res.status(400).json({
         error: 'Validation Error',
@@ -35,7 +30,6 @@ const getSkillGap = async (req, res) => {
       });
     }
 
-    // 3. Fetch Student and Career from database
     const student = await User.findById(studentId);
     if (!student) {
       return res.status(404).json({
@@ -52,7 +46,6 @@ const getSkillGap = async (req, res) => {
       });
     }
 
-    // 4. Extract skills
     const studentSkills = student.skills || [];
     const careerRequiredSkills = career.requiredSkills || [];
 
@@ -63,27 +56,26 @@ const getSkillGap = async (req, res) => {
       });
     }
 
-    // 5. Deduplicate skills arrays
+    const studentAssessments = await Assessment.find({ studentId }).sort({ completedAt: -1 });
+
     const uniqueStudentSkills = [...new Set(studentSkills)];
     const uniqueCareerSkills = [...new Set(careerRequiredSkills)];
 
-    // 6. Calculate skill gap analysis
-    const gapAnalysis = calculateSkillGap(uniqueStudentSkills, uniqueCareerSkills);
+    const gapAnalysis = calculateSkillGap(uniqueStudentSkills, uniqueCareerSkills, studentAssessments);
 
-    // 7. Calculate priorities for missing skills
     const priorities = calculateSkillPriorities(
       gapAnalysis.missingSkills,
       career.title,
       gapAnalysis.matchedSkills
     );
 
-    // 8. Return structured JSON response
     return res.status(200).json({
       career: career.title,
       matchedSkills: gapAnalysis.matchedSkills,
       missingSkills: gapAnalysis.missingSkills,
       partialSkills: gapAnalysis.partialSkills,
       matchPercentage: gapAnalysis.matchPercentage,
+      assessmentExplanations: gapAnalysis.assessmentExplanations || [],
       priorities
     });
 
@@ -96,16 +88,10 @@ const getSkillGap = async (req, res) => {
   }
 };
 
-/**
- * Controller: POST /api/analysis/recommendations
- * Generates AI or fallback recommendations based on skill gap output
- */
 const getRecommendations = async (req, res) => {
   try {
     const { studentId, careerId, career, matchedSkills, missingSkills, partialSkills, priorities } = req.body;
 
-    // Support the frontend flow: studentId + careerId are resolved from MongoDB,
-    // then passed through the SAME Member 3 services (no duplicated logic).
     if (!career && studentId && careerId) {
       if (!mongoose.Types.ObjectId.isValid(studentId)) {
         return res.status(400).json({ error: 'Validation Error', message: 'Invalid studentId format.' });

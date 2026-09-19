@@ -1,10 +1,3 @@
-/**
- * Skill Matching Service
- * Provides skill normalization, alias resolution, deterministic matching, 
- * gap analysis, and match percentage calculations.
- */
-
-// Common alias map: maps variations to canonical lowercased representation
 const SKILL_ALIASES = {
   'js': 'javascript',
   'java script': 'javascript',
@@ -24,7 +17,6 @@ const SKILL_ALIASES = {
   'type script': 'typescript'
 };
 
-// Map of student skills that partially satisfy a required skill requirement
 const PARTIAL_SKILL_RELATIONS = {
   'express': 'node.js',
   'react native': 'react',
@@ -33,24 +25,13 @@ const PARTIAL_SKILL_RELATIONS = {
   'c++': 'c'
 };
 
-/**
- * Normalizes skill string: lowercase, trim whitespace, and resolve aliases
- * @param {string} skill
- * @returns {string}
- */
 function normalizeSkill(skill) {
   if (!skill || typeof skill !== 'string') return '';
   const cleaned = skill.trim().toLowerCase();
   return SKILL_ALIASES[cleaned] || cleaned;
 }
 
-/**
- * Perform skill gap analysis between student skills and career required skills
- * @param {Array<string>} studentSkills
- * @param {Array<string>} careerRequiredSkills
- * @returns {Object} { matchedSkills, missingSkills, partialSkills, matchPercentage }
- */
-function calculateSkillGap(studentSkills = [], careerRequiredSkills = []) {
+function calculateSkillGap(studentSkills = [], careerRequiredSkills = [], assessments = []) {
   const normalizedStudentMap = new Map();
   studentSkills.forEach(s => {
     if (s && typeof s === 'string') {
@@ -59,9 +40,20 @@ function calculateSkillGap(studentSkills = [], careerRequiredSkills = []) {
     }
   });
 
+  const assessmentMap = new Map();
+  if (Array.isArray(assessments)) {
+    assessments.forEach(a => {
+      if (a && a.skill) {
+        const norm = normalizeSkill(a.skill);
+        assessmentMap.set(norm, a);
+      }
+    });
+  }
+
   const matchedSkills = [];
   const missingSkills = [];
   const partialSkills = [];
+  const assessmentExplanations = [];
 
   const matchedStudentNorms = new Set();
 
@@ -69,16 +61,47 @@ function calculateSkillGap(studentSkills = [], careerRequiredSkills = []) {
     if (!reqSkill || typeof reqSkill !== 'string') return;
     const reqTrimmed = reqSkill.trim();
     const reqNorm = normalizeSkill(reqTrimmed);
+    const hasAssessed = assessmentMap.get(reqNorm);
 
     if (normalizedStudentMap.has(reqNorm)) {
-      matchedSkills.push(reqTrimmed);
-      matchedStudentNorms.add(reqNorm);
+      if (hasAssessed && hasAssessed.percentage < 70) {
+        partialSkills.push(reqTrimmed);
+        assessmentExplanations.push({
+          skill: reqTrimmed,
+          status: 'PARTIAL',
+          percentage: hasAssessed.percentage,
+          skillLevel: hasAssessed.skillLevel,
+          message: `Your profile says you know ${reqTrimmed}, but your assessment indicates that you need more practice.`
+        });
+      } else {
+        matchedSkills.push(reqTrimmed);
+        matchedStudentNorms.add(reqNorm);
+        if (hasAssessed) {
+          assessmentExplanations.push({
+            skill: reqTrimmed,
+            status: 'MATCHED',
+            percentage: hasAssessed.percentage,
+            skillLevel: hasAssessed.skillLevel,
+            message: `Assessment verified: ${reqTrimmed} (${hasAssessed.percentage}%, ${hasAssessed.skillLevel}).`
+          });
+        }
+      }
     } else {
-      missingSkills.push(reqTrimmed);
+      if (hasAssessed && hasAssessed.percentage >= 70) {
+        matchedSkills.push(reqTrimmed);
+        assessmentExplanations.push({
+          skill: reqTrimmed,
+          status: 'DETECTED SKILL',
+          percentage: hasAssessed.percentage,
+          skillLevel: hasAssessed.skillLevel,
+          message: `Detected skill from assessment: ${reqTrimmed} (${hasAssessed.percentage}%).`
+        });
+      } else {
+        missingSkills.push(reqTrimmed);
+      }
     }
   });
 
-  // Identify partial skills from unmatched student skills
   normalizedStudentMap.forEach((originalStudentSkill, studentNorm) => {
     if (!matchedStudentNorms.has(studentNorm)) {
       careerRequiredSkills.forEach(reqSkill => {
@@ -101,7 +124,8 @@ function calculateSkillGap(studentSkills = [], careerRequiredSkills = []) {
     matchedSkills,
     missingSkills,
     partialSkills,
-    matchPercentage
+    matchPercentage,
+    assessmentExplanations
   };
 }
 

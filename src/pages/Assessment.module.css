@@ -1,70 +1,266 @@
-.page { display: flex; flex-direction: column; gap: 1.25rem; }
-.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-.title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 600; }
-.sub { font-size: 14px; color: var(--ink-muted); margin-top: 4px; max-width: 520px; }
-.headerRight { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
-.progressInfo { text-align: right; }
-.progressPct { display: block; font-size: 1.5rem; font-weight: 800; color: var(--forest); line-height: 1; }
-.progressLabel { font-size: 12px; color: var(--ink-faint); }
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
-.progressTrack { height: 6px; background: var(--paper-dark); border-radius: 99px; overflow: hidden; }
-.progressFill { height: 100%; background: var(--forest); border-radius: 99px; transition: width 0.4s ease; }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
 
-.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
-.tab {
+.title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sub {
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+.modeSwitch {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--paper-dark, #EAE5DC);
+  padding: 4px;
+  border-radius: var(--radius, 10px);
+}
+
+.modeBtn {
   padding: 6px 14px;
-  border-radius: 99px;
-  border: 1.5px solid var(--border);
-  background: var(--white);
-  font-size: 13px; font-weight: 500;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--ink-muted);
   cursor: pointer;
   transition: all 0.15s;
 }
-.tab:hover { border-color: var(--forest-light); color: var(--forest); }
-.tabActive { border-color: var(--forest); background: var(--forest-pale); color: var(--forest); font-weight: 600; }
 
-.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-
-.skillCard {
+.modeBtnActive {
   background: var(--white);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: 1rem 1.1rem;
-  display: flex; flex-direction: column; gap: 10px;
-  box-shadow: var(--shadow-xs);
+  color: var(--forest);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-.skillHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-.skillName { font-size: 14px; font-weight: 600; color: var(--ink); }
-.skillCategory { font-size: 11px; color: var(--ink-faint); font-weight: 500; white-space: nowrap; }
 
-.levels { display: flex; gap: 5px; flex-wrap: wrap; }
-.levelBtn {
-  padding: 4px 10px;
+/* Skills Grid */
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.skillCheckCard {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(44, 74, 56, 0.12);
+  border-radius: var(--radius-lg, 16px);
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.skillTitle {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.assessedBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
   border-radius: 99px;
-  border: 1.5px solid var(--border);
-  background: var(--white);
-  font-size: 11px; font-weight: 600;
-  color: var(--ink-muted);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.levelBtn:hover { border-color: var(--forest-light); color: var(--forest); }
-.levelActive {
-  border-color: var(--lc, var(--forest));
-  background: color-mix(in srgb, var(--lc, var(--forest)) 12%, white);
-  color: var(--lc, var(--forest));
 }
 
-.saveRow {
-  display: flex; align-items: center; gap: 1.5rem;
-  padding: 1.5rem;
-  background: var(--paper);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-light);
+.badgeStrong { background: #dcfce7; color: #166534; }
+.badgeIntermediate { background: #e0e7ff; color: #3730a3; }
+.badgeBasic { background: #fef9c3; color: #854d0e; }
+.badgeBeginner { background: #fee2e2; color: #991b1b; }
+.badgeNotAssessed { background: #f1f5f9; color: #64748b; }
+
+.actionGroup {
+  display: flex;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
-.saveHint { font-size: 13px; color: var(--ink-muted); }
 
-@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+/* Quiz UI */
+.quizCard {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(44, 74, 56, 0.14);
+  border-radius: var(--radius-lg, 16px);
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(44, 74, 56, 0.06);
+}
+
+.stepEyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--forest);
+}
+
+.quizMainHeading {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 6px 0 1rem;
+}
+
+.metaRow {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--border-light, #EAE5DC);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.questionMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-faint);
+  margin-bottom: 0.75rem;
+}
+
+.questionText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.codeBox {
+  background: #1e293b;
+  color: #f8fafc;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.9rem 1.15rem;
+  border: 1.5px solid var(--border-light, #EAE5DC);
+  border-radius: 10px;
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.optionItem:hover {
+  border-color: var(--forest);
+  background: var(--forest-pale, #EAF2ED);
+}
+
+.optionSelected {
+  border-color: var(--forest);
+  background: var(--forest-pale, #EAF2ED);
+  font-weight: 600;
+}
+
+.optionRadio {
+  accent-color: var(--forest);
+}
+
+/* Coding Round */
+.codingGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.codeEditor {
+  width: 100%;
+  height: 280px;
+  background: #0f172a;
+  color: #f1f5f9;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.9rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.testCaseItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  margin-top: 4px;
+}
+
+/* Result View */
+.resultCard {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(44, 74, 56, 0.14);
+  border-radius: var(--radius-lg, 16px);
+  padding: 2.25rem;
+  text-align: center;
+}
+
+.resultScore {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--forest);
+  line-height: 1;
+  margin: 0.5rem 0;
+}
+
+.skipNote {
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+  font-style: italic;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 860px) {
+  .codingGrid {
+    grid-template-columns: 1fr;
+  }
+}
