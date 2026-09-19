@@ -4,6 +4,7 @@ require('dotenv').config();
 const connectDB = require('./config/db');
 
 const analysisRoutes = require('./routes/analysisRoutes');
+const roadmapRoutes = require('./routes/roadmapRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/analysis', analysisRoutes);
+app.use('/api/roadmap', roadmapRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
